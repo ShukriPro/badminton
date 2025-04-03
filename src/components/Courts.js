@@ -5,9 +5,7 @@ function Courts() {
   const [nextCourtId, setNextCourtId] = useState(1);
 
   useEffect(() => {
-    // Load courts from localStorage testing
     const storedCourts = JSON.parse(localStorage.getItem('courts')) || [];
-    // If no courts exist, create 2 by default
     if (storedCourts.length === 0) {
       const defaultCourts = [
         { id: 1, players: [] },
@@ -23,13 +21,11 @@ function Courts() {
     }
   }, []);
 
-  // Save courts to localStorage
   const saveCourts = (updated) => {
     setCourts(updated);
     localStorage.setItem('courts', JSON.stringify(updated));
   };
 
-  // Add Court
   const addCourt = () => {
     const newCourt = { id: nextCourtId, players: [] };
     const updated = [...courts, newCourt];
@@ -38,72 +34,42 @@ function Courts() {
     window.location.reload();
   };
 
-  // Remove Court (only if empty)
   const removeCourt = (courtId) => {
     const updated = courts.filter(c => c.id !== courtId);
     saveCourts(updated);
     window.location.reload();
   };
 
-  // Example placeholder for filling courts from waiting queue
-  const handleTimerStart = () => {
-    const waitingPlayers = JSON.parse(localStorage.getItem('waiting2play')) || [];
-    const updatedCourts = [...courts];
-
-    // Fill each court up to 4 players
-    for (let i = 0; i < updatedCourts.length; i++) {
-      while (updatedCourts[i].players.length < 4 && waitingPlayers.length > 0) {
-        updatedCourts[i].players.push(waitingPlayers.shift());
-      }
-    }
-
-    saveCourts(updatedCourts);
-    localStorage.setItem('waiting2play', JSON.stringify(waitingPlayers));
-  };
-
-  // Example placeholder for moving players back to waiting queue
-  const handleTimerEnd = () => {
-    let waitingPlayers = JSON.parse(localStorage.getItem('waiting2play')) || [];
-    const clearedCourts = courts.map(court => {
-      waitingPlayers = [...waitingPlayers, ...court.players];
-      return { ...court, players: [] };
-    });
-
-    saveCourts(clearedCourts);
-    localStorage.setItem('waiting2play', JSON.stringify(waitingPlayers));
-  };
-
   return (
-    <div 
-      style={{ 
-        display: "grid", 
-        gridTemplateColumns: "1fr",  // Single column spanning full width
-        gap: "1rem", 
-        height: "100%" 
-      }}
-    >
-      {/* Courts list */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+    <div className="grid grid-cols-1 gap-4 h-full">
+      <div className="flex flex-col gap-4">
         {courts.map((court) => (
-          <div key={court.id} style={{ border: "1px solid #ccc", padding: "0.5rem" }}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div key={court.id} className="border p-2 rounded">
+            <div className="flex justify-between items-center">
               <strong>Court: {court.id.toString().padStart(2, '0')}</strong>
               {court.players.length === 0 && (
-                <button onClick={() => removeCourt(court.id)}>
+                <button
+                  className="border px-2 py-1 text-sm"
+                  onClick={() => removeCourt(court.id)}
+                >
                   Remove Court
                 </button>
               )}
             </div>
-            <div style={{ marginTop: "0.5rem" }}>
-              Players: {court.players.join(', ')}
+            <div className="mt-2">
+              Players: {court.players.map(p => `${p.firstName} ${p.lastName}`).join(', ')}
             </div>
-            <div>
-              {court.players.length < 2 && <span style={{ color: "red" }}>Min 2 players</span>}{' '}
-              {court.players.length >= 4 && <span style={{ color: "red" }}>Court full</span>}
+            <div className="text-sm mt-1">
+              {court.players.length < 2 && (
+                <span className="text-red-500">Min 2 players</span>
+              )}
+              {court.players.length >= 4 && (
+                <span className="text-red-500">Court full</span>
+              )}
             </div>
           </div>
         ))}
-        <button onClick={addCourt} style={{ padding: "0.5rem" }}>
+        <button onClick={addCourt} className="border px-2 py-1">
           Add Court +
         </button>
       </div>

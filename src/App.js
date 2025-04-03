@@ -6,22 +6,25 @@ import Courts from "./components/Courts";
 
 function App() {
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "200px 1fr 1fr 200px", gap: "1rem", height: "100vh", padding: "1rem" }}>
+    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "1rem", height: "100vh", padding: "1rem" }}>
       
-      {/* Players */}
-      <PlayerList/>
+      <div className="border rounded p-2">
+        <PlayerList />
+      </div>
 
-      {/* Waiting to Play */}
-      <Waiting2play/>
+      <div className="border rounded p-2">
+        <Waiting2play />
+      </div>
 
-      {/* Timer */}
-      <Timer/>
+      <div className="border rounded p-2">
+        <Timer />
+      </div>
 
-      {/* Courts */}
-      <Courts/> 
+      <Courts />
 
     </div>
   );
 }
+
 
 export default App;

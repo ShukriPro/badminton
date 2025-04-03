@@ -3,134 +3,130 @@ import React, { useState, useEffect } from 'react';
 function PlayerList() {
   const [players, setPlayers] = useState([]);
   const [showAddDialog, setShowAddDialog] = useState(false);
-  const [newPlayer, setNewPlayer] = useState('');
+  const [form, setForm] = useState({ firstName: '', lastName: '', gender: 'male', level: 'beginner' });
   const [editingIndex, setEditingIndex] = useState(null);
-  const [editingName, setEditingName] = useState('');
 
   useEffect(() => {
-    loadPlayers();
-  }, []);
-
-  // Load from localStorage
-  const loadPlayers = () => {
     const stored = JSON.parse(localStorage.getItem('players')) || [];
     setPlayers(stored);
-  };
+  }, []);
 
-  // Save to localStorage
   const savePlayers = (updated) => {
     setPlayers(updated);
     localStorage.setItem('players', JSON.stringify(updated));
   };
 
-  // Add a new player (only to the players list)
   const addPlayer = () => {
-    if (!newPlayer.trim()) return;
-    const updated = [...players, newPlayer.trim()];
+    if (!form.firstName.trim() || !form.lastName.trim()) return;
+    const newPlayer = {
+      id: crypto.randomUUID(),
+      ...form
+    };
+    const updated = [...players, newPlayer];
     savePlayers(updated);
-    setNewPlayer('');
-    setShowAddDialog(false);
-    window.location.reload(); // Refresh UI
+    resetForm();
+    window.location.reload();
   };
 
-  // Delete player
   const deletePlayer = (index) => {
     const updated = [...players];
     updated.splice(index, 1);
     savePlayers(updated);
-    window.location.reload(); // Refresh UI
+    window.location.reload();
   };
 
-  // Edit player
   const openEditDialog = (index) => {
+    const p = players[index];
     setEditingIndex(index);
-    setEditingName(players[index]);
-  };
-  const closeEditDialog = () => {
-    setEditingIndex(null);
-    setEditingName('');
-  };
-  const saveEdit = () => {
-    if (!editingName.trim()) return;
-    const updated = [...players];
-    updated[editingIndex] = editingName.trim();
-    savePlayers(updated);
-    closeEditDialog();
-    window.location.reload(); // Refresh UI
+    setForm({ firstName: p.firstName, lastName: p.lastName, gender: p.gender, level: p.level });
   };
 
-  // Move player from 'players' to 'waiting2play'
+  const saveEdit = () => {
+    const updated = [...players];
+    updated[editingIndex] = { ...updated[editingIndex], ...form };
+    savePlayers(updated);
+    resetForm();
+    window.location.reload();
+  };
+
+  const resetForm = () => {
+    setForm({ firstName: '', lastName: '', gender: 'male', level: 'beginner' });
+    setEditingIndex(null);
+    setShowAddDialog(false);
+  };
+
   const moveToWaiting2Play = (player, index) => {
-    // 1. Add to waiting2play
     const waiting = JSON.parse(localStorage.getItem('waiting2play')) || [];
     waiting.push(player);
     localStorage.setItem('waiting2play', JSON.stringify(waiting));
 
-    // 2. Remove from players
     const updatedPlayers = [...players];
     updatedPlayers.splice(index, 1);
     savePlayers(updatedPlayers);
-
-    // 3. Refresh UI
     window.location.reload();
   };
 
   return (
-    <div style={{ border: "1px solid #ccc", padding: "1rem" }}>
+    <div>
       <h2>Player List</h2>
       <ul style={{ listStyle: "none", padding: 0 }}>
-        {players.map((player, i) => (
-          <li key={i} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-            {player}
+        {players.map((p, i) => (
+          <li key={p.id} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+            {`${p.firstName} ${p.lastName}`}
             <div>
-              <button onClick={() => openEditDialog(i)} style={{ marginRight: '0.5rem' }}>
-                Edit
-              </button>
-              <button onClick={() => deletePlayer(i)} style={{ marginRight: '0.5rem' }}>
-                Delete
-              </button>
-              <button onClick={() => moveToWaiting2Play(player, i)}>
-                Add to Wait
-              </button>
+              <button onClick={() => openEditDialog(i)} style={{ marginRight: '0.5rem' }}>Edit</button>
+              <button onClick={() => deletePlayer(i)} style={{ marginRight: '0.5rem' }}>Delete</button>
+              <button onClick={() => moveToWaiting2Play(p, i)}>Add to Wait</button>
             </div>
           </li>
         ))}
       </ul>
+
       <button onClick={() => setShowAddDialog(true)}>Add Player</button>
 
-      {/* Add Dialog */}
-      {showAddDialog && (
+      {(showAddDialog || editingIndex !== null) && (
         <div style={overlayStyle}>
           <div style={dialogStyle}>
-            <h3>Add Player</h3>
+            <h3>{editingIndex !== null ? "Edit Player" : "Add Player"}</h3>
             <input
-              type="text"
-              value={newPlayer}
-              onChange={(e) => setNewPlayer(e.target.value)}
+              placeholder="First Name"
+              value={form.firstName}
+              onChange={(e) => setForm({ ...form, firstName: e.target.value })}
             />
-            <div style={{ marginTop: '1rem' }}>
-              <button onClick={addPlayer}>Add</button>
-              <button onClick={() => setShowAddDialog(false)} style={{ marginLeft: '0.5rem' }}>
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+            <input
+              placeholder="Last Name"
+              value={form.lastName}
+              onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+            />
+         <select
+  value={form.gender}
+  onChange={(e) => setForm({ ...form, gender: e.target.value })}
+>
+  <option value="" disabled hidden>
+    Select gender
+  </option>
+  <option value="male">Male</option>
+  <option value="female">Female</option>
+  <option value="other">Other</option>
+</select>
 
-      {/* Edit Dialog */}
-      {editingIndex !== null && (
-        <div style={overlayStyle}>
-          <div style={dialogStyle}>
-            <h3>Edit Player</h3>
-            <input
-              type="text"
-              value={editingName}
-              onChange={(e) => setEditingName(e.target.value)}
-            />
+<select
+  value={form.level}
+  onChange={(e) => setForm({ ...form, level: e.target.value })}
+>
+  <option value="" disabled hidden>
+    Select level
+  </option>
+  <option value="beginner">Beginner</option>
+  <option value="intermediate">Intermediate</option>
+  <option value="advanced">Advanced</option>
+</select>
+
             <div style={{ marginTop: '1rem' }}>
-              <button onClick={saveEdit}>Save</button>
-              <button onClick={closeEditDialog} style={{ marginLeft: '0.5rem' }}>
+              <button onClick={editingIndex !== null ? saveEdit : addPlayer}>
+                {editingIndex !== null ? 'Save' : 'Add'}
+              </button>
+              <button onClick={resetForm} style={{ marginLeft: '0.5rem' }}>
                 Cancel
               </button>
             </div>
@@ -141,7 +137,6 @@ function PlayerList() {
   );
 }
 
-// Simple overlay/dialog styles
 const overlayStyle = {
   position: 'fixed',
   top: 0,
@@ -158,7 +153,10 @@ const dialogStyle = {
   background: '#fff',
   padding: '1rem',
   borderRadius: '4px',
-  minWidth: '300px'
+  minWidth: '300px',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '0.5rem'
 };
 
 export default PlayerList;
