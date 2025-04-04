@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Trash2 } from 'lucide-react';
 
 function Courts() {
   const [courts, setCourts] = useState([]);
@@ -10,10 +11,12 @@ function Courts() {
       const defaultCourts = [
         { id: 1, players: [] },
         { id: 2, players: [] },
+        { id: 3, players: [] },
+        { id: 4, players: [] }
       ];
       localStorage.setItem('courts', JSON.stringify(defaultCourts));
       setCourts(defaultCourts);
-      setNextCourtId(3);
+      setNextCourtId(5);
     } else {
       setCourts(storedCourts);
       const maxId = storedCourts.reduce((max, c) => (c.id > max ? c.id : max), 0);
@@ -40,36 +43,86 @@ function Courts() {
     window.location.reload();
   };
 
+  const courtStyle = {
+    border: '1px solid rgba(0, 0, 0, 0.15)',
+    borderRadius: '6px',
+    padding: '12px',
+    marginBottom: '12px',
+    background: '#ffffff',
+    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
+  };
+
+  const buttonStyle = {
+    border: '1px solid rgba(0, 0, 0, 0.15)',
+    borderRadius: '4px',
+    padding: '6px 12px',
+    cursor: 'pointer',
+    background: '#f8f8f8'
+  };
+
   return (
-    <div className="grid grid-cols-1 gap-4 h-full">
-      <div className="flex flex-col gap-4">
+    <div >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {courts.map((court) => (
-          <div key={court.id} className="border p-2 rounded">
-            <div className="flex justify-between items-center">
+          <div key={court.id} style={courtStyle}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <strong>Court: {court.id.toString().padStart(2, '0')}</strong>
               {court.players.length === 0 && (
                 <button
-                  className="border px-2 py-1 text-sm"
+                  style={{
+                    ...buttonStyle,
+                    position: 'relative',
+                    background: 'none',
+                    border: 'none',
+                    padding: '4px'
+                  }}
                   onClick={() => removeCourt(court.id)}
+                  onMouseOver={(e) => e.currentTarget.querySelector('.tooltip').style.opacity = 1}
+                  onMouseOut={(e) => e.currentTarget.querySelector('.tooltip').style.opacity = 0}
                 >
-                  Remove Court
+                  <span className="tooltip" style={{
+                    position: 'absolute',
+                    top: '-25px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                    color: 'white',
+                    padding: '3px 8px',
+                    borderRadius: '4px',
+                    fontSize: '12px',
+                    whiteSpace: 'nowrap',
+                    opacity: 0,
+                    transition: 'opacity 0.2s',
+                    pointerEvents: 'none'
+                  }}>Remove Court</span>
+                  <Trash2 size={18} />
                 </button>
               )}
             </div>
-            <div className="mt-2">
-              Players: {court.players.map(p => `${p.firstName} ${p.lastName}`).join(', ')}
-            </div>
-            <div className="text-sm mt-1">
-              {court.players.length < 2 && (
-                <span className="text-red-500">Min 2 players</span>
-              )}
-              {court.players.length >= 4 && (
-                <span className="text-red-500">Court full</span>
-              )}
+            <div style={{ marginTop: '12px' }}>
+              <div style={{ marginBottom: '8px' }}>
+                <strong>Players:</strong> {court.players.map(p => `${p.firstName} ${p.lastName}`).join(', ') || 'No players assigned'}
+              </div>
+              <div style={{ fontSize: '0.875rem', color: '#666' }}>
+                {court.players.length < 2 && (
+                  <span style={{ color: '#e53e3e' }}>Min 2 players</span>
+                )}
+                {court.players.length >= 4 && (
+                  <span style={{ color: '#e53e3e' }}>Court full</span>
+                )}
+              </div>
             </div>
           </div>
         ))}
-        <button onClick={addCourt} className="border px-2 py-1">
+        <button 
+          onClick={addCourt} 
+          style={{
+            ...buttonStyle,
+            padding: '10px 16px',
+            textAlign: 'center',
+            fontWeight: '500'
+          }}
+        >
           Add Court +
         </button>
       </div>
