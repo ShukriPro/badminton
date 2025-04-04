@@ -60,8 +60,17 @@ function Courts() {
     background: '#f8f8f8'
   };
 
+  const playerNameStyle = {
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    padding: '4px 8px',
+    margin: '2px 0',
+    backgroundColor: '#f9f9f9',
+    display: 'block'
+  };
+
   return (
-    <div >
+    <div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {courts.map((court) => (
           <div key={court.id} style={courtStyle}>
@@ -101,7 +110,16 @@ function Courts() {
             </div>
             <div style={{ marginTop: '12px' }}>
               <div style={{ marginBottom: '8px' }}>
-                <strong>Players:</strong> {court.players.map(p => `${p.firstName} ${p.lastName}`).join(', ') || 'No players assigned'}
+
+                {court.players.length > 0 ? (
+                  court.players.map((p, index) => (
+                    <span key={index} style={playerNameStyle}>
+                      {`${p.firstName} ${p.lastName}`}
+                    </span>
+                  ))
+                ) : (
+                  <span style={{ color: '#666' }}>No players assigned</span>
+                )}
               </div>
               <div style={{ fontSize: '0.875rem', color: '#666' }}>
                 {court.players.length < 2 && (

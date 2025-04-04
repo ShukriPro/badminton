@@ -126,9 +126,7 @@ function PlayerList() {
 
   return (
     <div>
-      <h2>Player List</h2>
-      
-      <div style={{ marginBottom: '1rem', position: 'relative' }}>
+      <div style={{ marginBottom: '0.1rem', position: 'relative' }}>
         <input
           type="text"
           placeholder="Search players..."
@@ -160,8 +158,23 @@ function PlayerList() {
           // Find the original index in the players array
           const originalIndex = players.findIndex(player => player.id === p.id);
           return (
-            <li key={p.id} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', alignItems: 'center' }}>
-              {`${p.firstName} ${p.lastName}`}
+            <li 
+              key={p.id} 
+              style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                marginBottom: '0.5rem', 
+                alignItems: 'center',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                padding: '10px',
+                backgroundColor: '#f9f9f9'
+              }}
+            >
+              <div>
+                <strong>{`${p.firstName} ${p.lastName}`}</strong>
+             
+              </div>
               <div style={{ display: 'flex', gap: '10px' }}>
                 <button 
                   onClick={() => openEditDialog(originalIndex)} 
