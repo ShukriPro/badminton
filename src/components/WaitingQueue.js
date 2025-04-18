@@ -58,7 +58,7 @@ function WaitingQueue() {
               onMouseLeave={() => setHoveredIndex(null)}
             >
               <div style={{ flexGrow: 1 }}>
-                {`${player.firstName} ${player.lastName} (${player.gender}, ${player.level})`}
+                {`${player.firstName} ${player.lastName}`}
                 {hoveredIndex === i && (
                   <div style={{ 
                     position: 'absolute', 

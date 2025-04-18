@@ -1,11 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PlayerList from "./components/PlayerList";
 import Waiting2play from "./components/WaitingQueue";
 import Timer from "./components/Timer";
 import Courts from "./components/Courts";
 import Header from "./components/Header";
+import { syncPlayersToFirestore } from "./components/syncPlayersToFirestore";
 
 function App() {
+  // Check if userId is already in localStorage, if not, generate a new one
+  useEffect(() => {
+    document.body.style.zoom = '0.7';
+    document.body.style.overflowX = 'hidden'; // disable horizontal scroll
+
+    if (!localStorage.getItem("userId")) {
+      const userId = crypto.randomUUID(); // Generates a unique ID
+      localStorage.setItem("userId", userId);
+    }
+
+    syncPlayersToFirestore();
+  }, []);
+
   return (
     <div style={{
       padding: "1rem",

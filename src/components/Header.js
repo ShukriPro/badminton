@@ -7,9 +7,7 @@ const Header = () => {
   
   const menuItems = [
     { id: 'add-player', label: 'Add Player' },
-    { id: 'language', label: 'Language' },
-    { id: 'statistics', label: 'Statistics' },
-    { id: 'help', label: 'Help' }
+
   ];
   
   const resetForm = () => {
