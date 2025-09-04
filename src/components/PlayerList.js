@@ -11,6 +11,7 @@ function PlayerList() {
   const [editingIndex, setEditingIndex] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
+  
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem('players')) || [];
     setPlayers(stored);
@@ -168,7 +169,7 @@ function PlayerList() {
                 border: '1px solid #ddd',
                 borderRadius: '4px',
                 padding: '10px',
-                backgroundColor: '#f9f9f9'
+                backgroundColor: p.gender === 'female' ? '#ffe6e6' : p.gender === 'male' ? '#e6ffe6' : '#f9f9f9'
               }}
             >
               <div>

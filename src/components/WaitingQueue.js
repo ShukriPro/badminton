@@ -41,7 +41,10 @@ function WaitingQueue() {
         </div>
       ) : (
         <ul style={{ listStyle: 'none', padding: 0 }}>
-          {waitingPlayers.map((player, i) => (
+          {waitingPlayers.map((player, i) => {
+            console.log(".....................................");
+            console.log(`Player ${player.firstName} ${player.lastName}: gender="${player.gender}"`);
+            return (
             <li 
               key={player.id} 
               style={{ 
@@ -51,7 +54,7 @@ function WaitingQueue() {
                 border: '1px solid #ddd',
                 borderRadius: '4px',
                 padding: '10px',
-                backgroundColor: '#f9f9f9',
+                backgroundColor: player.gender === 'female' ? '#ffe6e6' : player.gender === 'male' ? '#e6ffe6' : '#f9f9f9',
                 alignItems: 'center'
               }}
               onMouseEnter={() => setHoveredIndex(i)}
@@ -90,7 +93,8 @@ function WaitingQueue() {
                 <X size={16} color="red" />
               </button>
             </li>
-          ))}
+            );
+          })}
         </ul>
       )}
     </div>

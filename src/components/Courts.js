@@ -113,7 +113,10 @@ function Courts() {
 
                 {court.players.length > 0 ? (
                   court.players.map((p, index) => (
-                    <span key={index} style={playerNameStyle}>
+                    <span key={index} style={{
+                      ...playerNameStyle,
+                      backgroundColor: p.gender === 'female' ? '#ffe6e6' : p.gender === 'male' ? '#e6ffe6' : '#f9f9f9'
+                    }}>
                       {`${p.firstName} ${p.lastName}`}
                     </span>
                   ))

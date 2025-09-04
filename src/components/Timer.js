@@ -46,12 +46,14 @@ function Timer() {
     localStorage.setItem("isRunning", isRunning.toString());
   }, [timeLeft, isRunning]);
 
+  // Convert seconds to MM:SS format
   const formatTime = (seconds) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
     return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
   };
 
+  // Start or pause the timer, assign players to courts when starting
   const handleStartPause = () => {
     if (!isRunning) {
       movePlayersToCourtsRandomly();
@@ -59,6 +61,7 @@ function Timer() {
     setIsRunning(!isRunning);
   };
 
+  // Reset timer to default time and move all players back to waiting
   const handleReset = () => {
     movePlayersBackToWaiting();
     setTimeLeft(defaultTime);
@@ -68,6 +71,7 @@ function Timer() {
     window.location.reload();
   };
 
+  // Randomly assign waiting players to courts (max 4 players per court)
   const movePlayersToCourtsRandomly = () => {
     let waiting = JSON.parse(localStorage.getItem("waiting2play")) || [];
     let courts = JSON.parse(localStorage.getItem("courts")) || [];
@@ -84,6 +88,7 @@ function Timer() {
     window.location.reload();
   };
 
+  // Move all players from courts back to the waiting queue
   const movePlayersBackToWaiting = () => {
     let waiting = JSON.parse(localStorage.getItem("waiting2play")) || [];
     let courts = JSON.parse(localStorage.getItem("courts")) || [];
@@ -97,6 +102,7 @@ function Timer() {
     localStorage.setItem("waiting2play", JSON.stringify(waiting));
   };
 
+  // Randomly shuffle the order of items in an array
   const shuffleArray = (array) => {
     let currentIndex = array.length, randomIndex;
     while (currentIndex !== 0) {
@@ -107,6 +113,7 @@ function Timer() {
     return array;
   };
 
+  // Open the edit dialog to change timer duration
   const openEditDialog = () => {
     setEditMinutes(Math.floor(timeLeft / 60));
     setShowEditDialog(true);
@@ -115,6 +122,7 @@ function Timer() {
     localStorage.setItem("timeLeft", timeLeft.toString());
   };
 
+  // Save the new timer duration and close the edit dialog
   const saveEdit = () => {
     const newTime = parseInt(editMinutes, 10) * 60;
     setTimeLeft(newTime >= 0 ? newTime : 0);
