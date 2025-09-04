@@ -73,20 +73,48 @@ function Timer() {
 
   // Randomly assign waiting players to courts (max 4 players per court)
   const movePlayersToCourtsRandomly = () => {
-    let waiting = JSON.parse(localStorage.getItem("waiting2play")) || [];
-    let courts = JSON.parse(localStorage.getItem("courts")) || [];
-    waiting = shuffleArray(waiting);
+  let waiting = JSON.parse(localStorage.getItem("waiting2play")) || [];
+  let courts = JSON.parse(localStorage.getItem("courts")) || [];
 
-    for (let i = 0; i < courts.length; i++) {
-      while (courts[i].players.length < 4 && waiting.length > 0) {
-        courts[i].players.push(waiting.shift());
-      }
+  // Split by gender and shuffle separately
+  let males = shuffleArray(waiting.filter(p => p.gender === "male"));
+  let females = shuffleArray(waiting.filter(p => p.gender === "female"));
+
+  // Assign players to courts
+  for (let i = 0; i < courts.length; i++) {
+    courts[i].players = [];
+
+    // Add up to 2 males
+    for (let m = 0; m < 2 && males.length > 0; m++) {
+      courts[i].players.push(males.shift());
     }
 
-    localStorage.setItem("courts", JSON.stringify(courts));
-    localStorage.setItem("waiting2play", JSON.stringify(waiting));
-    window.location.reload();
+    // Add up to 2 females
+    for (let f = 0; f < 2 && females.length > 0; f++) {
+      courts[i].players.push(females.shift());
+    }
+
+    // If court not full, fill with leftover players (any gender)
+    while (courts[i].players.length < 4 && (males.length > 0 || females.length > 0)) {
+      if (males.length > 0) {
+        courts[i].players.push(males.shift());
+      } else if (females.length > 0) {
+        courts[i].players.push(females.shift());
+      }
+    }
+  }
+
+  // Any leftover players remain in waiting queue
+  waiting = males.concat(females);
+
+  // Save state
+  localStorage.setItem("courts", JSON.stringify(courts));
+  localStorage.setItem("waiting2play", JSON.stringify(waiting));
+
+  // Refresh UI
+  window.location.reload();
   };
+
 
   // Move all players from courts back to the waiting queue
   const movePlayersBackToWaiting = () => {
