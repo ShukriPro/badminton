@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
-
+import Header from './Header';
 function PlayerList() {
   const [players, setPlayers] = useState([]);
   const [showAddDialog, setShowAddDialog] = useState(false);
@@ -127,6 +127,8 @@ function PlayerList() {
 
   return (
     <div>
+      {/* Full width header */}
+      <Header />
       <div style={{ marginBottom: '0.1rem', position: 'relative' }}>
         <input
           type="text"

@@ -66,12 +66,14 @@ function Courts() {
     padding: '4px 8px',
     margin: '2px 0',
     backgroundColor: '#f9f9f9',
-    display: 'block'
+    display: 'block',
+    fontWeight: 'bold',
+    fontSize: '1.25rem'
   };
 
   return (
     <div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column'}}>
         {courts.map((court) => (
           <div key={court.id} style={courtStyle}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

@@ -78,7 +78,8 @@ const Header = () => {
     padding: '4px 10px',
     margin: '0 4px',
     background: '#f8f8f8',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    width: '100%'
   };
   
   return (
@@ -89,7 +90,7 @@ const Header = () => {
             <button
               key={item.id}
               onClick={() => handleMenuClick(item)}
-              style={buttonStyle}
+              style={{ ...buttonStyle, width: '100%' }}
             >
               {item.label}
             </button>

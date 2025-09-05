@@ -22,10 +22,9 @@ function App() {
 
   return (
     <div style={{
-      padding: "1rem",
+      padding: "0.1rem",
     }}>
-      {/* Full width header */}
-      <Header />
+      
 
       {/* Grid with four columns for the rest of the content */}
       <div
