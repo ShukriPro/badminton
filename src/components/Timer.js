@@ -240,8 +240,9 @@ function Timer() {
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
-      minHeight: "100vh",
-      width: "100%"
+      height: "100vh",
+      width: "100%",
+      boxSizing: "border-box"
     }}>
       <h1 style={{ 
         fontSize: "3rem", 
@@ -290,6 +291,15 @@ function Timer() {
       <p style={{ marginTop: "8px", fontSize: "0.875rem", color: "#666" }}>
         Press <strong>Space</strong> to start/pause
       </p>
+      
+      <div style={{ 
+        marginTop: "16px", 
+        textAlign: "center", 
+        fontSize: "0.75rem",
+        color: "#999"
+      }}>
+        Version 1.0.0
+      </div>
 
       {showEditDialog && (
         <div style={overlayStyle}>

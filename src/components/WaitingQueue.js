@@ -58,8 +58,13 @@ function WaitingQueue() {
               onMouseEnter={() => setHoveredIndex(i)}
               onMouseLeave={() => setHoveredIndex(null)}
             >
-              <div style={{ flexGrow: 1, fontSize: '1.1rem', fontWeight: 'bold' }}>
-                {`${player.firstName} ${player.lastName}`}
+              <div style={{ flexGrow: 1 }}>
+                <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>
+                  {`${player.firstName} ${player.lastName}`}
+                </div>
+                <div style={{ fontSize: '0.8rem', color: '#666', marginTop: '2px' }}>
+                  {player.level ? player.level.charAt(0).toUpperCase() + player.level.slice(1) : 'No level'}
+                </div>
                 {hoveredIndex === i && (
                   <div style={{ 
                     position: 'absolute', 

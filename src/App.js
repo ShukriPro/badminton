@@ -22,6 +22,9 @@ function App() {
   return (
     <div style={{
       padding: "0.1rem",
+      height: "100vh",
+      boxSizing: "border-box",
+      overflow: "hidden"
     }}>
       
 
@@ -31,9 +34,9 @@ function App() {
           display: "grid",
           gridTemplateColumns: "1fr 1fr 1fr 3fr",
           gap: "1rem",
-          height: "100vh",
-          
-          marginTop: "1rem",
+          height: "calc(100vh - 0.2rem)",
+          margin: "0.2rem",
+          boxSizing: "border-box"
         }}
       >
         <div className="border rounded p-2">
@@ -45,7 +48,9 @@ function App() {
         <div className="border rounded p-2">
           <Timer />
         </div>
-        <Courts />
+        <div style={{ height: "100%", overflow: "hidden" }}>
+          <Courts />
+        </div>
       </div>
     </div>
   );

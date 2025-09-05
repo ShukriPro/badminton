@@ -119,12 +119,17 @@ function Courts() {
 
                 {court.players.length > 0 ? (
                   court.players.map((p, index) => (
-                    <span key={index} style={{
+                    <div key={index} style={{
                       ...playerNameStyle,
                       backgroundColor: p.gender === 'female' ? '#ffe6e6' : p.gender === 'male' ? '#e6ffe6' : '#f9f9f9'
                     }}>
-                      {`${p.firstName} ${p.lastName}`}
-                    </span>
+                      <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>
+                        {`${p.firstName} ${p.lastName}`}
+                      </div>
+                      <div style={{ fontSize: '0.8rem', color: '#666', marginTop: '2px' }}>
+                        {p.level ? p.level.charAt(0).toUpperCase() + p.level.slice(1) : 'No level'}
+                      </div>
+                    </div>
                   ))
                 ) : (
                   <span style={{ color: '#666' }}>No players assigned</span>
