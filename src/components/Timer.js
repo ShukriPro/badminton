@@ -37,22 +37,26 @@ function Timer() {
       setIsRunning(false);
       localStorage.setItem("isRunning", "false");
 
+      // Move all players back to waiting queue
       movePlayersBackToWaiting();
-
-      // Get the last edited/saved time instead of default
-      const lastSaved = localStorage.getItem("defaultTime");
-      const resetTime = lastSaved ? parseInt(lastSaved, 10) : defaultTime;
+      // ✅ Always respect last saved custom time
+      const resetTime = parseInt(
+        localStorage.getItem("defaultTime") || defaultTime,
+        10
+      );
+      setTimeLeft(resetTime);
+      localStorage.setItem("timeLeft", resetTime.toString());
 
       setTimeout(() => {
-        setTimeLeft(resetTime);
-        localStorage.setItem("timeLeft", resetTime.toString());
-        window.location.reload();
+        movePlayersToCourtsRandomly();
+        setIsRunning(true);
+        localStorage.setItem("isRunning", "true");
       }, 100);
     }
 
     return () => clearInterval(timerId);
   }, [isRunning, timeLeft]);
-  
+
   // Persist timeLeft and isRunning to localStorage
   useEffect(() => {
     localStorage.setItem("timeLeft", timeLeft.toString());
