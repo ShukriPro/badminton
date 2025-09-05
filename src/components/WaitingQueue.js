@@ -42,9 +42,7 @@ function WaitingQueue() {
       ) : (
         <ul style={{ listStyle: 'none', padding: 0 }}>
           {waitingPlayers.map((player, i) => {
-            console.log(".....................................");
-            console.log(`Player ${player.firstName} ${player.lastName}: gender="${player.gender}"`);
-            return (
+          return (
             <li 
               key={player.id} 
               style={{ 
@@ -60,7 +58,7 @@ function WaitingQueue() {
               onMouseEnter={() => setHoveredIndex(i)}
               onMouseLeave={() => setHoveredIndex(null)}
             >
-              <div style={{ flexGrow: 1 }}>
+              <div style={{ flexGrow: 1, fontSize: '1.1rem', fontWeight: 'bold' }}>
                 {`${player.firstName} ${player.lastName}`}
                 {hoveredIndex === i && (
                   <div style={{ 

@@ -88,6 +88,11 @@ function Timer() {
   // Start or pause the timer, assign players to courts when starting
   const handleStartPause = () => {
     if (!isRunning) {
+      // Don't start if timer is 0 or less
+      if (timeLeft <= 0) {
+        return;
+      }
+      
       // Only random players if courts are empty
       let courts = JSON.parse(localStorage.getItem("courts")) || [];
       const hasPlayers = courts.some(
@@ -204,7 +209,7 @@ function Timer() {
   // Save new timer duration
   const saveEdit = () => {
     const newTime = parseInt(editMinutes, 10); // already in seconds
-    const safeTime = newTime >= 0 ? newTime : 0;
+    const safeTime = newTime >= 5 ? newTime : 5; // Minimum 5 seconds
 
     setTimeLeft(safeTime);
     setShowEditDialog(false);
@@ -311,9 +316,11 @@ function Timer() {
                   type="number"
                   min="0"
                   value={Math.floor(editMinutes / 60)}
-                  onChange={(e) =>
-                    setEditMinutes(+e.target.value * 60 + (editMinutes % 60))
-                  }
+                  onChange={(e) => {
+                    const minutes = Math.max(0, +e.target.value);
+                    const totalSeconds = minutes * 60 + (editMinutes % 60);
+                    setEditMinutes(Math.max(5, totalSeconds)); // Ensure minimum 5 seconds
+                  }}
                   style={{
                     width: "100%",
                     marginTop: "0.25rem",
@@ -335,11 +342,11 @@ function Timer() {
                   min="0"
                   max="59"
                   value={editMinutes % 60}
-                  onChange={(e) =>
-                    setEditMinutes(
-                      Math.floor(editMinutes / 60) * 60 + +e.target.value
-                    )
-                  }
+                  onChange={(e) => {
+                    const seconds = Math.max(0, Math.min(59, +e.target.value));
+                    const totalSeconds = Math.floor(editMinutes / 60) * 60 + seconds;
+                    setEditMinutes(Math.max(5, totalSeconds)); // Ensure minimum 5 seconds
+                  }}
                   style={{
                     width: "100%",
                     marginTop: "0.25rem",

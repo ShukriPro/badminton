@@ -10,7 +10,7 @@ function PlayerList() {
   const [touched, setTouched] = useState({ firstName: false, lastName: false, gender: false, level: false });
   const [editingIndex, setEditingIndex] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-
+  
   
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem('players')) || [];
@@ -175,8 +175,8 @@ function PlayerList() {
               }}
             >
               <div>
-                <strong>{`${p.firstName} ${p.lastName}`}</strong>
-             
+                <strong style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{`${p.firstName} ${p.lastName}`}</strong>
+               
               </div>
               <div style={{ display: 'flex', gap: '10px' }}>
                 <button 
