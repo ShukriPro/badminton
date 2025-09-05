@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { Play, Pause, RotateCcw, Edit3 } from "lucide-react";
 import alertSound from "../sounds/alert.mp3";
 
 function Timer() {
@@ -211,16 +212,79 @@ function Timer() {
     localStorage.setItem("timeLeft", safeTime.toString());
     localStorage.setItem("defaultTime", safeTime.toString());
   };
+  const buttonStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    padding: '8px 16px',
+    border: '1px solid rgba(0, 0, 0, 0.15)',
+    borderRadius: '6px',
+    background: '#f8f8f8',
+    cursor: 'pointer',
+    fontSize: '14px',
+    fontWeight: '500',
+    transition: 'all 0.2s ease'
+  };
+
   return (
-    <div className=" p-4 rounded text-center">
-      <h1 style={{ fontSize: "3rem", margin: 0 }}>{formatTime(timeLeft)}</h1>
-      <div className="mt-4 flex justify-center gap-2">
-        <button onClick={handleStartPause}>
+    <div style={{ 
+      padding: "1rem", 
+      borderRadius: "6px", 
+      textAlign: "center",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      minHeight: "100vh",
+      width: "100%"
+    }}>
+      <h1 style={{ 
+        fontSize: "3rem", 
+        margin: 0,
+        textAlign: "center",
+        width: "100%"
+      }}>{formatTime(timeLeft)}</h1>
+      <div style={{ 
+        marginTop: "1rem", 
+        display: "flex", 
+        flexDirection: "row", 
+        justifyContent: "center", 
+        alignItems: "center",
+        gap: "8px",
+        flexWrap: "wrap",
+        width: "100%"
+      }}>
+        <button 
+          onClick={handleStartPause}
+          style={buttonStyle}
+          onMouseOver={(e) => e.currentTarget.style.background = '#e6e6e6'}
+          onMouseOut={(e) => e.currentTarget.style.background = '#f8f8f8'}
+        >
+          {isRunning ? <Pause size={16} /> : <Play size={16} />}
           {isRunning ? "Pause" : "Start"}
         </button>
-        <button onClick={handleReset}>Reset</button>
-        <button onClick={openEditDialog}>Edit</button>
+        <button 
+          onClick={handleReset}
+          style={buttonStyle}
+          onMouseOver={(e) => e.currentTarget.style.background = '#e6e6e6'}
+          onMouseOut={(e) => e.currentTarget.style.background = '#f8f8f8'}
+        >
+          <RotateCcw size={16} />
+          Reset
+        </button>
+        <button 
+          onClick={openEditDialog}
+          style={buttonStyle}
+          onMouseOver={(e) => e.currentTarget.style.background = '#e6e6e6'}
+          onMouseOut={(e) => e.currentTarget.style.background = '#f8f8f8'}
+        >
+          <Edit3 size={16} />
+          Edit
+        </button>
       </div>
+      <p style={{ marginTop: "8px", fontSize: "0.875rem", color: "#666" }}>
+        Press <strong>Space</strong> to start/pause
+      </p>
 
       {showEditDialog && (
         <div style={overlayStyle}>
@@ -293,8 +357,22 @@ function Timer() {
                 gap: "0.5rem",
               }}
             >
-              <button onClick={saveEdit}>Save</button>
-              <button onClick={() => setShowEditDialog(false)}>Cancel</button>
+              <button 
+                onClick={saveEdit}
+                style={buttonStyle}
+                onMouseOver={(e) => e.currentTarget.style.background = '#e6e6e6'}
+                onMouseOut={(e) => e.currentTarget.style.background = '#f8f8f8'}
+              >
+                Save
+              </button>
+              <button 
+                onClick={() => setShowEditDialog(false)}
+                style={buttonStyle}
+                onMouseOver={(e) => e.currentTarget.style.background = '#e6e6e6'}
+                onMouseOut={(e) => e.currentTarget.style.background = '#f8f8f8'}
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>

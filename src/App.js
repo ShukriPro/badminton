@@ -9,7 +9,6 @@ import { syncPlayersToFirestore } from "./components/syncPlayersToFirestore";
 function App() {
   // Check if userId is already in localStorage, if not, generate a new one
   useEffect(() => {
-    document.body.style.zoom = '0.7';
     document.body.style.overflowX = 'hidden'; // disable horizontal scroll
 
     if (!localStorage.getItem("userId")) {
@@ -30,7 +29,7 @@ function App() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr 1fr",
+          gridTemplateColumns: "1fr 1fr 1fr 3fr",
           gap: "1rem",
           height: "100vh",
           

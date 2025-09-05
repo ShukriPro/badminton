@@ -73,7 +73,11 @@ function Courts() {
 
   return (
     <div>
-      <div style={{ display: 'flex', flexDirection: 'column'}}>
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(2, 1fr)',
+        gap: '12px'
+      }}>
         {courts.map((court) => (
           <div key={court.id} style={courtStyle}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -137,18 +141,20 @@ function Courts() {
             </div>
           </div>
         ))}
-        <button 
-          onClick={addCourt} 
-          style={{
-            ...buttonStyle,
-            padding: '10px 16px',
-            textAlign: 'center',
-            fontWeight: '500'
-          }}
-        >
-          Add Court +
-        </button>
       </div>
+      <button 
+        onClick={addCourt} 
+        style={{
+          ...buttonStyle,
+          padding: '10px 16px',
+          textAlign: 'center',
+          fontWeight: '500',
+          marginTop: '12px',
+          width: '100%'
+        }}
+      >
+        Add Court +
+      </button>
     </div>
   );
 }
