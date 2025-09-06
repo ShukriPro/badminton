@@ -175,8 +175,8 @@ function PlayerList() {
               }}
             >
               <div>
-                <strong style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{`${p.firstName} ${p.lastName}`}</strong>
-                <div style={{ fontSize: '0.8rem', color: '#666', marginTop: '2px' }}>
+                <strong style={{ fontSize: '0.7rem', fontWeight: 'bold' }}>{`${p.firstName} ${p.lastName}`}</strong>
+                <div style={{ fontSize: '0.7rem', color: '#666', marginTop: '2px' }}>
                   {p.level ? p.level.charAt(0).toUpperCase() + p.level.slice(1) : 'No level'}
                 </div>
               </div>

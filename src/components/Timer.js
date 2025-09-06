@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Play, Pause, RotateCcw, Edit3 } from "lucide-react";
 import alertSound from "../sounds/alert.mp3";
+import halfTimeSound from "../sounds/japan_female_hairimashita.mp3";
 
 function Timer() {
   //Load defaultTime from localStorage (fallback to 15 minutes)
@@ -18,9 +19,15 @@ function Timer() {
     return localStorage.getItem("isRunning") === "true";
   });
 
+  const [halftimeEnabled, setHalftimeEnabled] = useState(() => {
+  const stored = localStorage.getItem("halftimeSound");
+  return stored !== "false"; // default = true if not set
+});
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [editMinutes, setEditMinutes] = useState(15);
   const audioRef = useRef(new Audio(alertSound));
+  const halfTimeAudioRef = useRef(new Audio(halfTimeSound));
+
   // Timer countdown logic
   useEffect(() => {
     let timerId;
@@ -29,6 +36,14 @@ function Timer() {
       timerId = setInterval(() => {
         setTimeLeft((prev) => prev - 1);
       }, 1000);
+
+      // play the sound in half-time
+      if (
+        localStorage.getItem("halftimeSound") !== "false" &&
+        timeLeft === Math.floor(defaultTime / 2)
+      ) {
+        halfTimeAudioRef.current.play().catch(() => {});
+      }
 
       // 🔔 This is where the sound is played
       if (timeLeft === 10) {
@@ -301,99 +316,120 @@ function Timer() {
         Version 1.0.0
       </div>
 
-      {showEditDialog && (
-        <div style={overlayStyle}>
-          <div style={dialogStyle}>
-            <h3>Edit Timer</h3>
+ {showEditDialog && (
+  <div style={overlayStyle}>
+    <div style={dialogStyle}>
+      <h3>Edit Timer</h3>
 
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.75rem",
-                marginTop: "0.5rem",
-              }}
-            >
-              <label
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  width: "100%",
-                }}
-              >
-                Minutes:
-                <input
-                  type="number"
-                  min="0"
-                  value={Math.floor(editMinutes / 60)}
-                  onChange={(e) => {
-                    const minutes = Math.max(0, +e.target.value);
-                    const totalSeconds = minutes * 60 + (editMinutes % 60);
-                    setEditMinutes(Math.max(5, totalSeconds)); // Ensure minimum 5 seconds
-                  }}
-                  style={{
-                    width: "100%",
-                    marginTop: "0.25rem",
-                    padding: "0.5rem",
-                  }}
-                />
-              </label>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "0.75rem",
+          marginTop: "0.5rem",
+        }}
+      >
+        {/* Minutes input */}
+        <label style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+          Minutes:
+          <input
+            type="number"
+            min="0"
+            value={Math.floor(editMinutes / 60)}
+            onChange={(e) => {
+              const minutes = Math.max(0, +e.target.value);
+              const totalSeconds = minutes * 60 + (editMinutes % 60);
+              setEditMinutes(Math.max(5, totalSeconds)); // Ensure minimum 5 seconds
+            }}
+            style={{ width: "100%", marginTop: "0.25rem", padding: "0.5rem" }}
+          />
+        </label>
 
-              <label
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  width: "100%",
-                }}
-              >
-                Seconds:
-                <input
-                  type="number"
-                  min="0"
-                  max="59"
-                  value={editMinutes % 60}
-                  onChange={(e) => {
-                    const seconds = Math.max(0, Math.min(59, +e.target.value));
-                    const totalSeconds = Math.floor(editMinutes / 60) * 60 + seconds;
-                    setEditMinutes(Math.max(5, totalSeconds)); // Ensure minimum 5 seconds
-                  }}
-                  style={{
-                    width: "100%",
-                    marginTop: "0.25rem",
-                    padding: "0.5rem",
-                  }}
-                />
-              </label>
-            </div>
+        {/* Seconds input */}
+        <label style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+          Seconds:
+          <input
+            type="number"
+            min="0"
+            max="59"
+            value={editMinutes % 60}
+            onChange={(e) => {
+              const seconds = Math.max(0, Math.min(59, +e.target.value));
+              const totalSeconds = Math.floor(editMinutes / 60) * 60 + seconds;
+              setEditMinutes(Math.max(5, totalSeconds)); // Ensure minimum 5 seconds
+            }}
+            style={{ width: "100%", marginTop: "0.25rem", padding: "0.5rem" }}
+          />
+        </label>
 
-            <div
-              style={{
-                marginTop: "1rem",
-                display: "flex",
-                justifyContent: "flex-end",
-                gap: "0.5rem",
-              }}
-            >
-              <button 
-                onClick={saveEdit}
-                style={buttonStyle}
-                onMouseOver={(e) => e.currentTarget.style.background = '#e6e6e6'}
-                onMouseOut={(e) => e.currentTarget.style.background = '#f8f8f8'}
-              >
-                Save
-              </button>
-              <button 
-                onClick={() => setShowEditDialog(false)}
-                style={buttonStyle}
-                onMouseOver={(e) => e.currentTarget.style.background = '#e6e6e6'}
-                onMouseOut={(e) => e.currentTarget.style.background = '#f8f8f8'}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+        {/* ✅ Half-time sound toggle */}
+       {/* 🔄 Half-time sound toggle */}
+<label style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+  <span>Half-time sound</span>
+  <div
+    onClick={() => {
+      const newValue = !halftimeEnabled;
+      setHalftimeEnabled(newValue);
+      localStorage.setItem("halftimeSound", newValue ? "true" : "false");
+    }}
+    style={{
+      width: "40px",
+      height: "20px",
+      borderRadius: "20px",
+      background: halftimeEnabled ? "#4caf50" : "#ccc",
+      position: "relative",
+      cursor: "pointer",
+      transition: "background 0.2s",
+    }}
+  >
+    <div
+      style={{
+        width: "16px",
+        height: "16px",
+        borderRadius: "50%",
+        background: "#fff",
+        position: "absolute",
+        top: "2px",
+        left: halftimeEnabled ? "22px" : "2px",
+        transition: "left 0.2s",
+      }}
+    />
+  </div>
+</label>
+
+      </div>
+
+      {/* Buttons */}
+      <div
+        style={{
+          marginTop: "1rem",
+          display: "flex",
+          justifyContent: "flex-end",
+          gap: "0.5rem",
+        }}
+      >
+        <button
+          onClick={saveEdit}
+          style={buttonStyle}
+          onMouseOver={(e) => (e.currentTarget.style.background = "#e6e6e6")}
+          onMouseOut={(e) => (e.currentTarget.style.background = "#f8f8f8")}
+        >
+          Save
+        </button>
+        <button
+          onClick={() => setShowEditDialog(false)}
+          style={buttonStyle}
+          onMouseOver={(e) => (e.currentTarget.style.background = "#e6e6e6")}
+          onMouseOut={(e) => (e.currentTarget.style.background = "#f8f8f8")}
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+ 
     </div>
   );
 }
