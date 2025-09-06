@@ -76,7 +76,14 @@ function Courts() {
       <div style={{ 
         display: 'grid', 
         gridTemplateColumns: 'repeat(2, 1fr)',
-        gap: '12px'
+        gap: '12px',
+         listStyle: "none",
+          padding: 0,
+          overflowY: "auto",
+          zoom: "0.8",
+          marginBottom: "1rem",
+
+        
       }}>
         {courts.map((court) => (
           <div key={court.id} style={courtStyle}>

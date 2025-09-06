@@ -224,7 +224,7 @@ function Timer() {
   // Save new timer duration
   const saveEdit = () => {
     const newTime = parseInt(editMinutes, 10); // already in seconds
-    const safeTime = newTime >= 5 ? newTime : 5; // Minimum 5 seconds
+    const safeTime = Math.max(0, newTime); // Allow 0 or any positive number
 
     setTimeLeft(safeTime);
     setShowEditDialog(false);
@@ -275,15 +275,21 @@ function Timer() {
         flexWrap: "wrap",
         width: "100%"
       }}>
-        <button 
-          onClick={handleStartPause}
-          style={buttonStyle}
-          onMouseOver={(e) => e.currentTarget.style.background = '#e6e6e6'}
-          onMouseOut={(e) => e.currentTarget.style.background = '#f8f8f8'}
-        >
-          {isRunning ? <Pause size={16} /> : <Play size={16} />}
-          {isRunning ? "Pause" : "Start"}
-        </button>
+       <button
+  onClick={handleStartPause}
+  style={{
+    ...buttonStyle,
+    background: isRunning ? "#e53935" : "#4caf50", // red for Pause, green for Start
+    color: "#fff",
+    border: "none",
+  }}
+  onMouseOver={(e) => e.currentTarget.style.opacity = "0.9"}
+  onMouseOut={(e) => e.currentTarget.style.opacity = "1"}
+>
+  {isRunning ? <Pause size={16} /> : <Play size={16} />}
+  {isRunning ? "Pause" : "Start"}
+</button>
+
         <button 
           onClick={handleReset}
           style={buttonStyle}
@@ -339,7 +345,7 @@ function Timer() {
             onChange={(e) => {
               const minutes = Math.max(0, +e.target.value);
               const totalSeconds = minutes * 60 + (editMinutes % 60);
-              setEditMinutes(Math.max(5, totalSeconds)); // Ensure minimum 5 seconds
+              setEditMinutes(totalSeconds);
             }}
             style={{ width: "100%", marginTop: "0.25rem", padding: "0.5rem" }}
           />
@@ -356,7 +362,7 @@ function Timer() {
             onChange={(e) => {
               const seconds = Math.max(0, Math.min(59, +e.target.value));
               const totalSeconds = Math.floor(editMinutes / 60) * 60 + seconds;
-              setEditMinutes(Math.max(5, totalSeconds)); // Ensure minimum 5 seconds
+              setEditMinutes(totalSeconds);
             }}
             style={{ width: "100%", marginTop: "0.25rem", padding: "0.5rem" }}
           />

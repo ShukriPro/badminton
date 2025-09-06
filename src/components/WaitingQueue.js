@@ -35,12 +35,28 @@ function WaitingQueue() {
 
   return (
     <div>
+      <h3 style={{ 
+        textAlign: 'center', 
+        margin: '0 0 1rem 0', 
+        color: '#333',
+        fontSize: '1.2rem',
+        fontWeight: 'bold'
+      }}>
+        Waiting Queue ({waitingPlayers.length})
+      </h3>
       {waitingPlayers.length === 0 ? (
         <div style={{ textAlign: 'center', color: '#666', padding: '1rem' }}>
           No players in the waiting queue
         </div>
       ) : (
-        <ul style={{ listStyle: 'none', padding: 0 }}>
+        <ul 
+         style={{
+          listStyle: "none",
+          padding: 0,
+          overflowY: "auto",
+          maxHeight: "90vh",
+        }}
+        >
           {waitingPlayers.map((player, i) => {
           return (
             <li 
@@ -59,10 +75,10 @@ function WaitingQueue() {
               onMouseLeave={() => setHoveredIndex(null)}
             >
               <div style={{ flexGrow: 1 }}>
-                <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>
+                <div style={{ fontSize: '0.7rem', fontWeight: 'bold' }}>
                   {`${player.firstName} ${player.lastName}`}
                 </div>
-                <div style={{ fontSize: '0.8rem', color: '#666', marginTop: '2px' }}>
+                <div style={{ fontSize: '0.6rem', color: '#666', marginTop: '2px' }}>
                   {player.level ? player.level.charAt(0).toUpperCase() + player.level.slice(1) : 'No level'}
                 </div>
                 {hoveredIndex === i && (

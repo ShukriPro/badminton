@@ -75,8 +75,6 @@ const Header = () => {
   const buttonStyle = {
     border: '1px solid #ccc',
     borderRadius: '4px',
-    padding: '4px 10px',
-    margin: '0 4px',
     background: '#f8f8f8',
     cursor: 'pointer',
     width: '100%'
