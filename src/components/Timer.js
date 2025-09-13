@@ -137,51 +137,43 @@ function Timer() {
   };
 
   // Randomly assign waiting players to courts (max 4 players per court)
-  const movePlayersToCourtsRandomly = () => {
-    let waiting = JSON.parse(localStorage.getItem("waiting2play")) || [];
-    let courts = JSON.parse(localStorage.getItem("courts")) || [];
+ const movePlayersToCourtsRandomly = () => {
+  let waiting = JSON.parse(localStorage.getItem("waiting2play")) || [];
+  let courts = JSON.parse(localStorage.getItem("courts")) || [];
 
-    // Split by gender and shuffle separately
-    let males = shuffleArray(waiting.filter((p) => p.gender === "male"));
-    let females = shuffleArray(waiting.filter((p) => p.gender === "female"));
+  // Shuffle players by gender
+  let males = shuffleArray(waiting.filter(p => p.gender === "male"));
+  let females = shuffleArray(waiting.filter(p => p.gender === "female"));
 
-    // Assign players to courts
-    for (let i = 0; i < courts.length; i++) {
-      courts[i].players = [];
+  // Split by level
+  const splitByLevel = (arr, level) => arr.filter(p => p.level === level);
+  let advanced = shuffleArray(waiting.filter(p => p.level === "advanced"));
+  let others = shuffleArray(waiting.filter(p => p.level !== "advanced"));
 
-      // Add up to 2 males
-      for (let m = 0; m < 2 && males.length > 0; m++) {
-        courts[i].players.push(males.shift());
-      }
+  for (let i = 0; i < courts.length; i++) {
+    courts[i].players = [];
 
-      // Add up to 2 females
-      for (let f = 0; f < 2 && females.length > 0; f++) {
-        courts[i].players.push(females.shift());
-      }
-
-      // If court not full, fill with leftover players (any gender)
-      while (
-        courts[i].players.length < 4 &&
-        (males.length > 0 || females.length > 0)
-      ) {
-        if (males.length > 0) {
-          courts[i].players.push(males.shift());
-        } else if (females.length > 0) {
-          courts[i].players.push(females.shift());
-        }
-      }
+    // Add up to 2 advanced players
+    for (let a = 0; a < 2 && advanced.length > 0; a++) {
+      courts[i].players.push(advanced.shift());
     }
 
-    // Any leftover players remain in waiting queue
-    waiting = males.concat(females);
+    // Fill remaining slots with intermediate/beginner, respecting max 4 per court
+    while (courts[i].players.length < 4 && others.length > 0) {
+      courts[i].players.push(others.shift());
+    }
+  }
 
-    // Save state
-    localStorage.setItem("courts", JSON.stringify(courts));
-    localStorage.setItem("waiting2play", JSON.stringify(waiting));
+  // Any leftover players stay in waiting
+  waiting = advanced.concat(others);
 
-    // Refresh UI
-    window.location.reload();
-  };
+  // Save
+  localStorage.setItem("courts", JSON.stringify(courts));
+  localStorage.setItem("waiting2play", JSON.stringify(waiting));
+
+  window.location.reload();
+};
+
 
   // Move all players from courts back to the waiting queue
   const movePlayersBackToWaiting = () => {
